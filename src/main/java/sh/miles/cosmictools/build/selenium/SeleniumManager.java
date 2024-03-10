@@ -34,7 +34,7 @@ public final class SeleniumManager {
         final WebDriver driver;
         switch (driverType) {
             case CHROME -> driver = new ChromeDriver(new ChromeOptions().addArguments("--headless"));
-            case FIREFOX -> driver = new FirefoxDriver(new FirefoxOptions().addArguments("--headless=new"));
+            case FIREFOX -> driver = new FirefoxDriver(new FirefoxOptions().addArguments("--headless"));
             default -> throw new IllegalStateException("How did we get here");
         }
 
