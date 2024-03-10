@@ -2,6 +2,7 @@
 
 Option                            Description                             
 ------                            -----------                             
+--decompile-all                     decompiles all of the sources instead of just finalforeach/cosmicreach packages
 --download-only                   Only downloads Cosmic Reach but does not
                                     decompile it                          
 --driver-type <[CHROME,FIREFOX]>  The Selenium DriverType to use          
