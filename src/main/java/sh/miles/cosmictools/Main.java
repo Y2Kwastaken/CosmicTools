@@ -43,9 +43,10 @@ public class Main {
             System.exit(0);
         }
 
+        final boolean decompileAll = options.has(Flags.DECOMPILE_ALL);
         var jarPath = Constants.getCosmicReachJarPath(data);
         var decompilePath = Constants.getDecompilePath(data);
-        Utils.unzip(jarPath, decompilePath.resolve("classes"), (s) -> s.startsWith("finalforeach/cosmicreach"));
+        Utils.unzip(jarPath, decompilePath.resolve("classes"), (s) -> decompileAll || s.startsWith("finalforeach/cosmicreach"));
         try {
             new ProcessBuilder()
                     .command("java", "-jar", "work/vineflower.jar", "-dgs=1", "-hdc=0", "-rbr=0", "-asc=1", "-udc=0",

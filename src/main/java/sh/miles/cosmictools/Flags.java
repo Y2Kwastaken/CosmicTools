@@ -19,5 +19,5 @@ public final class Flags {
             .ofType(SeleniumManager.DriverType.class)
             .withValuesConvertedBy(new EnumConverter<>(SeleniumManager.DriverType.class) {
             });
-
+    public static final OptionSpec<Void> DECOMPILE_ALL = PARSER.accepts("decompile-all", "Doesn't filter the output of CosmicReach decompilation to finalforeach/cosmicreach folder but instead decomiples all resources");
 }
