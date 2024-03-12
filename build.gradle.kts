@@ -4,7 +4,7 @@ plugins {
 }
 
 group = "sh.miles.cosmictools"
-version = "1.0-SNAPSHOT"
+version = "2.0.0-SNAPSHOT"
 
 repositories {
     mavenCentral()
@@ -23,7 +23,7 @@ tasks.jar {
     enabled = false
     manifest {
         attributes(
-            mapOf("Main-Class" to "sh.miles.cosmictools.Main")
+            mapOf("Main-Class" to "sh.miles.cosmictools.CosmicTools")
         )
     }
 }

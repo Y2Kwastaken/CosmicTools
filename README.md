@@ -1,11 +1,12 @@
-# CosmicTools
+# Cosmic Tools
 
-Option                            Description                             
-------                            -----------                             
---decompile-all                     decompiles all of the sources instead of just finalforeach/cosmicreach packages
---download-only                   Only downloads Cosmic Reach but does not
-                                    decompile it                          
---driver-type <[CHROME,FIREFOX]>  The Selenium DriverType to use          
---help                            Displays the help command               
---nodown-cosmic                   Doesn't download cosmic from itch.io    
---nodown-vineflower               Doesn't download vineflower             
+Option                             Description
+------                             -----------                            
+--clear-cache                      clears all caching done                
+--decompile                        decompiles Cosmic Reach                
+--driver, --driver-type <[CHROME,  The Selenium DriverType to use         
+FIREFOX]>                                                               
+--help                             Prints All Help Options                
+--ignore-cache                     ignores all caches values and hard     
+downloads all elements even if caches
+--no-install                       does not maven install Cosmic Reach    
