@@ -2,6 +2,7 @@ package sh.miles.cosmictools.stage;
 
 import joptsimple.OptionSet;
 import org.jetbrains.annotations.NotNull;
+import sh.miles.cosmictools.NeoFlags;
 import sh.miles.cosmictools.util.CosmicReachInfo;
 import sh.miles.cosmictools.util.NeoConstants;
 
@@ -14,6 +15,9 @@ public class MavenInstallStage implements RunStage {
 
     @Override
     public int runStage(@NotNull final OptionSet options, @NotNull final Map<String, Object> propagate) throws Exception {
+        if (options.has(NeoFlags.NO_INSTALL)) {
+            return NeoConstants.SUCCESS;
+        }
         System.out.println("Starting Maven Installation");
         final CosmicReachInfo info = (CosmicReachInfo) propagate.getOrDefault("cosmic-reach-info", null);
         if (info == null) {
