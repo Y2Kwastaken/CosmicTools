@@ -29,25 +29,36 @@ public class MavenInstallStage implements RunStage {
         final String prefix;
         if (IS_WINDOWS) {
             mavenBin = Path.of(MavenDownloadStage.MAVEN_FOLDER).resolve("bin/mvn.cmd");
-            prefix = "";
+            new ProcessBuilder()
+                    .command(mavenBin.toAbsolutePath().toString(),
+                            "install:install-file",
+                            "-Dfile=%s".formatted(NeoConstants.COSMIC_REACH_DOWNLOAD.resolve(info.fileVersionName()).resolve(CosmicReachDecompileStage.COSMIC_REACH_JAR.formatted(info.version()))),
+                            "-DgroupId=finalforeach",
+                            "-DartifactId=cosmicreach",
+                            "-Dversion=%s".formatted(info.version()),
+                            "-Dpackaging=jar",
+                            "-DgeneratePom=true"
+                    )
+                    .inheritIO()
+                    .start()
+                    .waitFor();
         } else {
             mavenBin = Path.of(MavenDownloadStage.MAVEN_FOLDER).resolve("bin/mvn");
-            prefix = "sh";
+            new ProcessBuilder()
+                    .command(
+                            "sh", mavenBin.toAbsolutePath().toString(),
+                            "install:install-file",
+                            "-Dfile=%s".formatted(NeoConstants.COSMIC_REACH_DOWNLOAD.resolve(info.fileVersionName()).resolve(CosmicReachDecompileStage.COSMIC_REACH_JAR.formatted(info.version()))),
+                            "-DgroupId=finalforeach",
+                            "-DartifactId=cosmicreach",
+                            "-Dversion=%s".formatted(info.version()),
+                            "-Dpackaging=jar",
+                            "-DgeneratePom=true"
+                    )
+                    .inheritIO()
+                    .start()
+                    .waitFor();
         }
-        new ProcessBuilder()
-                .command(
-                        prefix, mavenBin.toAbsolutePath().toString(),
-                        "install:install-file",
-                        "-Dfile=%s".formatted(NeoConstants.COSMIC_REACH_DOWNLOAD.resolve(info.fileVersionName()).resolve(CosmicReachDecompileStage.COSMIC_REACH_JAR.formatted(info.version()))),
-                        "-DgroupId=finalforeach",
-                        "-DartifactId=cosmicreach",
-                        "-Dversion=%s".formatted(info.version()),
-                        "-Dpackaging=jar",
-                        "-DgeneratePom=true"
-                )
-                .inheritIO()
-                .start()
-                .waitFor();
         System.out.println("Finished Maven Installation");
 
         return NeoConstants.SUCCESS;

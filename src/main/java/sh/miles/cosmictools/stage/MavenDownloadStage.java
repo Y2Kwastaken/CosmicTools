@@ -36,7 +36,7 @@ public class MavenDownloadStage implements RunStage {
     }
 
     public static void downloadMaven() throws IOException {
-        System.out.println("Maven is not downloading, downloading maven.");
+        System.out.println("Maven is not downloaded, downloading maven.");
         Path tmp = Path.of(MAVEN_FILE);
         Utils.download(MAVEN_DOWNLOAD, tmp);
         Utils.unzip(tmp, NeoConstants.CWD, (s) -> true);
