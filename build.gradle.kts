@@ -1,10 +1,19 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath("com.guardsquare:proguard-gradle:7.4.2")
+    }
+}
+
 plugins {
     id("java")
     id("com.github.johnrengelman.shadow") version "8.1.1"
 }
 
 group = "sh.miles.cosmictools"
-version = "2.0.1-SNAPSHOT"
+version = "2.0.2-SNAPSHOT"
 
 repositories {
     mavenCentral()
@@ -44,5 +53,38 @@ tasks.test {
 }
 
 tasks.build {
-    dependsOn(tasks.shadowJar)
+    dependsOn(tasks.getByPath("proguard"))
+}
+
+tasks.register<proguard.gradle.ProGuardTask>("proguard") {
+    verbose()
+
+    injars(tasks.shadowJar)
+
+    outjars("build/proguard/CosmicTools.jar")
+
+    val javaHome = System.getProperty("java.home")
+    // Automatically handle the Java version of this build.
+    libraryjars(
+        // filters must be specified first, as a map
+        mapOf("jarfilter" to "!**.jar",
+            "filter"    to "!module-info.class"),
+        "$javaHome/jmods/java.base.jmod"
+    )
+
+    keepclassmembers("enum * { *; }")
+    // keep(" class org.openqa.selenium.** { *; }")
+    keep("class org.openqa.selenium.manager.** { *; }")
+    keep("class org.openqa.selenium.remote.http.** { *; }")
+    keep("class org.openqa.selenium.devtools.v120.v120CdpInfo { *; }")
+    allowaccessmodification()
+
+    dontwarn()
+    dontobfuscate()
+
+    keep("""
+        class sh.miles.cosmictools.CosmicTools {
+            public static void main(java.lang.String[]);
+        }
+    """)
 }
