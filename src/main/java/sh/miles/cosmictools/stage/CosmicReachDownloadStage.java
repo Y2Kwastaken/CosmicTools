@@ -26,7 +26,7 @@ public class CosmicReachDownloadStage implements RunStage {
             final CosmicReachInfo info = source.retrieveBuildData();
             propagate.put("cosmic-reach-info", info);
 
-            if (Files.notExists(NeoConstants.COSMIC_REACH_DOWNLOAD.resolve(info.fileVersionName())) && !options.has(NeoFlags.IGNORE_CACHE)) {
+            if (Files.notExists(NeoConstants.COSMIC_REACH_DOWNLOAD.resolve(info.fileVersionName())) || options.has(NeoFlags.IGNORE_CACHE)) {
                 System.out.println("Downloading CosmicReach");
                 source.download(info);
                 System.out.printf("Downloaded CosmicReach, Moving from %s to %s%n", NeoConstants.USER_DOWNLOAD_COSMIC_REACH, NeoConstants.COSMIC_REACH_ZIP_PATH);

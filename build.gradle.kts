@@ -13,7 +13,7 @@ plugins {
 }
 
 group = "sh.miles.cosmictools"
-version = "2.0.2-SNAPSHOT"
+version = "2.0.3-SNAPSHOT"
 
 repositories {
     mavenCentral()

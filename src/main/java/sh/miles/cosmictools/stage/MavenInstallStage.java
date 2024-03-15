@@ -18,6 +18,7 @@ public class MavenInstallStage implements RunStage {
         if (options.has(NeoFlags.NO_INSTALL)) {
             return NeoConstants.SUCCESS;
         }
+
         System.out.println("Starting Maven Installation");
         final CosmicReachInfo info = (CosmicReachInfo) propagate.getOrDefault("cosmic-reach-info", null);
         if (info == null) {

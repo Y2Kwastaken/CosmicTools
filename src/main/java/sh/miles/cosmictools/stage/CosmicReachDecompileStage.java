@@ -7,6 +7,7 @@ import sh.miles.cosmictools.NeoFlags;
 import sh.miles.cosmictools.util.CosmicReachInfo;
 import sh.miles.cosmictools.util.NeoConstants;
 
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Map;
 
@@ -29,12 +30,19 @@ public class CosmicReachDecompileStage implements RunStage {
         }
 
         final Path jarLocation = NeoConstants.COSMIC_REACH_DOWNLOAD.resolve(info.fileVersionName()).resolve(COSMIC_REACH_JAR.formatted(info.version()));
-        Utils.unzip(jarLocation, DECOMPILE_PATH.resolve("classes"), (s) -> true);
+        final Path destination = DECOMPILE_PATH.resolve(info.fileVersionName());
+        final Path classesDestination = destination.resolve("classes");
+
+        if (!options.has(NeoFlags.IGNORE_CACHE) && Files.exists(classesDestination)) {
+            return NeoConstants.SUCCESS;
+        }
+
+        Utils.unzip(jarLocation, classesDestination, (s) -> true);
 
         System.out.println("Starting decompilation of Cosmic Reach");
         new ProcessBuilder()
                 .command("java", "-jar", "vineflower.jar", "-dgs=1", "-hdc=0", "-rbr=0", "-asc=1", "-udc=0",
-                        DECOMPILE_PATH.resolve("classes").toString(), DECOMPILE_PATH.resolve("java").toString())
+                        classesDestination.toString(), destination.resolve("java").toString())
                 .inheritIO()
                 .start()
                 .waitFor();
