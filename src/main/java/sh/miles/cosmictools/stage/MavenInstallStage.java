@@ -4,6 +4,7 @@ import joptsimple.OptionSet;
 import org.jetbrains.annotations.NotNull;
 import sh.miles.cosmictools.NeoFlags;
 import sh.miles.cosmictools.util.CosmicReachInfo;
+import sh.miles.cosmictools.util.CurrentDirectory;
 import sh.miles.cosmictools.util.NeoConstants;
 
 import java.nio.file.Path;
@@ -29,7 +30,7 @@ public class MavenInstallStage implements RunStage {
         final Path mavenBin;
         final String prefix;
         if (IS_WINDOWS) {
-            mavenBin = Path.of(MavenDownloadStage.MAVEN_FOLDER).resolve("bin/mvn.cmd");
+            mavenBin = CurrentDirectory.cwd().resolve(MavenDownloadStage.MAVEN_FOLDER).resolve("bin/mvn.cmd");
             new ProcessBuilder()
                     .command(mavenBin.toAbsolutePath().toString(),
                             "install:install-file",
@@ -44,7 +45,7 @@ public class MavenInstallStage implements RunStage {
                     .start()
                     .waitFor();
         } else {
-            mavenBin = Path.of(MavenDownloadStage.MAVEN_FOLDER).resolve("bin/mvn");
+            mavenBin = CurrentDirectory.cwd().resolve(MavenDownloadStage.MAVEN_FOLDER).resolve("bin/mvn");
             new ProcessBuilder()
                     .command(
                             "sh", mavenBin.toAbsolutePath().toString(),

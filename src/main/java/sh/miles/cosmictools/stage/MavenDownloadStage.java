@@ -3,6 +3,7 @@ package sh.miles.cosmictools.stage;
 import joptsimple.OptionSet;
 import org.jetbrains.annotations.NotNull;
 import sh.miles.cosmictools.Utils;
+import sh.miles.cosmictools.util.CurrentDirectory;
 import sh.miles.cosmictools.util.NeoConstants;
 import sh.miles.cosmictools.NeoFlags;
 
@@ -21,7 +22,7 @@ public class MavenDownloadStage implements RunStage {
 
     @Override
     public int runStage(@NotNull final OptionSet options, @NotNull final Map<String, Object> propagate) throws Exception {
-        final Path maven = Path.of(MAVEN_FOLDER);
+        final Path maven = CurrentDirectory.cwd().resolve(MAVEN_FOLDER);
         final String m2 = System.getenv("M2_HOME");
         if (options.has(NeoFlags.IGNORE_CACHE)) {
             downloadMaven();
@@ -39,7 +40,7 @@ public class MavenDownloadStage implements RunStage {
         System.out.println("Maven is not downloaded, downloading maven.");
         Path tmp = Path.of(MAVEN_FILE);
         Utils.download(MAVEN_DOWNLOAD, tmp);
-        Utils.unzip(tmp, NeoConstants.CWD, (s) -> true);
+        Utils.unzip(tmp, CurrentDirectory.cwd(), (s) -> true);
         Files.deleteIfExists(tmp);
         System.out.println("Finished downloading maven, maven is now downloaded.");
     }

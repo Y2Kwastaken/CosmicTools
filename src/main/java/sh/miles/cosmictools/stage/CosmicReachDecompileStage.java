@@ -5,6 +5,7 @@ import org.jetbrains.annotations.NotNull;
 import sh.miles.cosmictools.Utils;
 import sh.miles.cosmictools.NeoFlags;
 import sh.miles.cosmictools.util.CosmicReachInfo;
+import sh.miles.cosmictools.util.CurrentDirectory;
 import sh.miles.cosmictools.util.NeoConstants;
 
 import java.nio.file.Files;
@@ -41,7 +42,7 @@ public class CosmicReachDecompileStage implements RunStage {
 
         System.out.println("Starting decompilation of Cosmic Reach");
         new ProcessBuilder()
-                .command("java", "-jar", "vineflower.jar", "-dgs=1", "-hdc=0", "-rbr=0", "-asc=1", "-udc=0",
+                .command("java", "-jar", CurrentDirectory.cwd().resolve("vineflower.jar").toString(), "-dgs=1", "-hdc=0", "-rbr=0", "-asc=1", "-udc=0",
                         classesDestination.toString(), destination.resolve("java").toString())
                 .inheritIO()
                 .start()

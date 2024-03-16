@@ -8,6 +8,7 @@ import sh.miles.cosmictools.stage.MavenDownloadStage;
 import sh.miles.cosmictools.stage.MavenInstallStage;
 import sh.miles.cosmictools.stage.RunStage;
 import sh.miles.cosmictools.stage.VineFlowerDownloadStage;
+import sh.miles.cosmictools.util.CurrentDirectory;
 import sh.miles.cosmictools.util.NeoConstants;
 
 import java.io.IOException;
@@ -22,15 +23,6 @@ public final class CosmicTools {
 
     private static final LinkedList<RunStage> stages = new LinkedList<>();
 
-    static {
-        stages.add(new MavenDownloadStage());
-        stages.add(new CosmicReachDownloadStage());
-        stages.add(new CosmicReachUnzipStage());
-        stages.add(new VineFlowerDownloadStage());
-        stages.add(new CosmicReachDecompileStage());
-        stages.add(new MavenInstallStage());
-    }
-
     /**
      * The entry point of CosmicTools
      *
@@ -40,6 +32,11 @@ public final class CosmicTools {
         final long start = System.currentTimeMillis();
         final OptionSet options = NeoFlags.PARSER.parse(args);
 
+        if (options.has(NeoFlags.CURRENT_DIRECTORY)) {
+            var cwd = NeoFlags.CURRENT_DIRECTORY.value(options);
+            CurrentDirectory.cwd(cwd);
+        }
+
         if (options.has(NeoFlags.HELP)) {
             try {
                 NeoFlags.PARSER.printHelpOn(System.out);
@@ -48,6 +45,7 @@ public final class CosmicTools {
             System.exit(NeoConstants.SUCCESS);
         }
 
+        loadStages();
         final Map<String, Object> propagationMap = new HashMap<>();
         int exitCode = NeoConstants.SUCCESS;
         try {
@@ -67,4 +65,12 @@ public final class CosmicTools {
         System.exit(exitCode);
     }
 
+    private static void loadStages() {
+        stages.add(new MavenDownloadStage());
+        stages.add(new CosmicReachDownloadStage());
+        stages.add(new CosmicReachUnzipStage());
+        stages.add(new VineFlowerDownloadStage());
+        stages.add(new CosmicReachDecompileStage());
+        stages.add(new MavenInstallStage());
+    }
 }
