@@ -3,9 +3,9 @@ package sh.miles.cosmictools.stage;
 import joptsimple.OptionSet;
 import org.jetbrains.annotations.NotNull;
 import sh.miles.cosmictools.NeoFlags;
-import sh.miles.cosmictools.cosmicreach.CosmicReachSource;
+import sh.miles.cosmictools.download.CosmicReachSource;
 import sh.miles.cosmictools.util.CosmicReachInfo;
-import sh.miles.cosmictools.util.DriverType;
+import sh.miles.cosmictools.utils.DriverType;
 import sh.miles.cosmictools.util.NeoConstants;
 
 import java.nio.file.Files;

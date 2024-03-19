@@ -4,7 +4,7 @@ import joptsimple.OptionParser;
 import joptsimple.OptionSpec;
 import joptsimple.util.EnumConverter;
 import joptsimple.util.PathConverter;
-import sh.miles.cosmictools.util.DriverType;
+import sh.miles.cosmictools.utils.DriverType;
 
 import java.nio.file.Path;
 import java.util.List;
