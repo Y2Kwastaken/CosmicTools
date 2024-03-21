@@ -8,12 +8,12 @@ buildscript {
 }
 
 plugins {
-    id("java")
+    kotlin("jvm") version "1.9.22"
     id("com.github.johnrengelman.shadow") version "8.1.1"
 }
 
 group = "sh.miles.cosmictools"
-version = "2.1.0-SNAPSHOT"
+version = "3.0.0-SNAPSHOT"
 
 repositories {
     mavenCentral()
@@ -23,6 +23,8 @@ dependencies {
     compileOnly("org.jetbrains:annotations-java5:24.0.1")
     implementation("net.sf.jopt-simple:jopt-simple:5.0.4")
     implementation("org.seleniumhq.selenium:selenium-java:4.18.1")
+    implementation("com.vdurmont:semver4j:3.1.0")
+    implementation(kotlin("stdlib"))
 
     testImplementation(platform("org.junit:junit-bom:5.9.1"))
     testImplementation("org.junit.jupiter:junit-jupiter")
@@ -32,7 +34,7 @@ tasks.jar {
     enabled = false
     manifest {
         attributes(
-            mapOf("Main-Class" to "sh.miles.cosmictools.CosmicTools")
+            mapOf("Main-Class" to "sh.miles.cosmictools.CosmicToolsKt")
         )
     }
 }
@@ -73,7 +75,6 @@ tasks.register<proguard.gradle.ProGuardTask>("proguard") {
     )
 
     keepclassmembers("enum * { *; }")
-    // keep(" class org.openqa.selenium.** { *; }")
     keep("class org.openqa.selenium.manager.** { *; }")
     keep("class org.openqa.selenium.remote.http.** { *; }")
     keep("class org.openqa.selenium.devtools.v120.v120CdpInfo { *; }")
@@ -83,7 +84,7 @@ tasks.register<proguard.gradle.ProGuardTask>("proguard") {
     dontobfuscate()
 
     keep("""
-        class sh.miles.cosmictools.CosmicTools {
+        class sh.miles.cosmictools.CosmicToolsKt {
             public static void main(java.lang.String[]);
         }
     """)
