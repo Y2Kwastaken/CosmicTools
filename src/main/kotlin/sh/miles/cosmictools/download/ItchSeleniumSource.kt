@@ -9,6 +9,9 @@ import org.openqa.selenium.firefox.FirefoxDriver
 import org.openqa.selenium.firefox.FirefoxOptions
 import org.openqa.selenium.support.ui.WebDriverWait
 import sh.miles.cosmictools.COSMIC_REACH
+import sh.miles.cosmictools.USER_DOWNLOAD
+import sh.miles.cosmictools.USER_DOWNLOAD_COSMIC_REACH
+import sh.miles.cosmictools.unzip
 import sh.miles.cosmictools.utils.DriverType
 import java.nio.file.Files
 import java.nio.file.Path
@@ -34,17 +37,23 @@ object ItchSeleniumSource : CosmicReachSource {
             .orElseThrow()
         downloadButton.click()
         WebDriverWait(driver, Duration.ofMinutes(10)).until {
-            if (Files.exists(destination)) {
-                return@until Files.size(destination) > 0
+            if (Files.exists(USER_DOWNLOAD_COSMIC_REACH)) {
+                return@until Files.size(USER_DOWNLOAD_COSMIC_REACH) > 0
             }
             return@until false
         }
+
+        unzip(USER_DOWNLOAD_COSMIC_REACH, destination) { it.endsWith(".jar") }
+        Files.deleteIfExists(USER_DOWNLOAD_COSMIC_REACH)
     }
 
     override fun info(): List<VersionData> {
         if (!initialized) throw IllegalStateException("$javaClass has not yet been initialized using initialize(parameters) method")
         val element = driver.findElement(By.className("version_name"))
-        return listOf(VersionData(element.text.split("\\.")[1], null))
+        println("Finding Version Info for Cosmic Reach")
+        val list = listOf(VersionData(element.text.split(" ")[1], null))
+        println("Finished finding Version Info for Cosmic Reach")
+        return list
     }
 
     override fun initialize(vararg parameters: Any): CosmicReachSource {
@@ -52,7 +61,7 @@ object ItchSeleniumSource : CosmicReachSource {
 
         driver = when (driverType) {
             DriverType.CHROME -> ChromeDriver(ChromeOptions().addArguments("--headless=new"))
-            DriverType.FIREFOX -> FirefoxDriver(FirefoxOptions().addArguments("--headless"))
+            DriverType.FIREFOX -> FirefoxDriver(FirefoxOptions().addArguments(""))
         }
 
         driver.get(link)

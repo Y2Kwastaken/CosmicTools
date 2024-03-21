@@ -1,6 +1,5 @@
 package sh.miles.cosmictools.download
 
-import sh.miles.cosmictools.utils.DownloadSource
 import java.nio.file.Path
 
 /**
@@ -11,7 +10,7 @@ interface CosmicReachSource : AutoCloseable {
      * Downloads cosmic reach from the version data
      *
      * @param version the version to download
-     * @param destination the destination of the download
+     * @param destination the destination of the downloaded jar
      */
     fun download(version: VersionData, destination: Path)
 
@@ -24,13 +23,8 @@ interface CosmicReachSource : AutoCloseable {
 
     /**
      * Initializes a cosmic reach source with the needed parameters
+     *
+     * @param parameters
      */
     fun initialize(vararg parameters: Any): CosmicReachSource
-
-    fun source(source: DownloadSource): CosmicReachSource {
-        return when (source) {
-            DownloadSource.SELENIUM -> ItchSeleniumSource
-            DownloadSource.UNOFFICIAL_GITHUB -> UnofficialGithubSource
-        }
-    }
 }

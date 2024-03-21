@@ -1,6 +1,6 @@
 package sh.miles.cosmictools.utils
 
-enum class DriverType(name: String) {
-    CHROME("chrome"),
-    FIREFOX("firefox");
+enum class DriverType() {
+    CHROME,
+    FIREFOX;
 }

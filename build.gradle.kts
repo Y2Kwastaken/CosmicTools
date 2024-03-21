@@ -23,6 +23,7 @@ dependencies {
     compileOnly("org.jetbrains:annotations-java5:24.0.1")
     implementation("net.sf.jopt-simple:jopt-simple:5.0.4")
     implementation("org.seleniumhq.selenium:selenium-java:4.18.1")
+    implementation("com.vdurmont:semver4j:3.1.0")
     implementation(kotlin("stdlib"))
 
     testImplementation(platform("org.junit:junit-bom:5.9.1"))
@@ -83,7 +84,7 @@ tasks.register<proguard.gradle.ProGuardTask>("proguard") {
     dontobfuscate()
 
     keep("""
-        class sh.miles.cosmictools.CosmicTools {
+        class sh.miles.cosmictools.CosmicToolsKt {
             public static void main(java.lang.String[]);
         }
     """)
