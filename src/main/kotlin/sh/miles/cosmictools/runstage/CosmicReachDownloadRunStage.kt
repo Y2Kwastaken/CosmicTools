@@ -5,6 +5,7 @@ import joptsimple.OptionSet
 import sh.miles.cosmictools.COSMIC_REACH_DOWNLOAD
 import sh.miles.cosmictools.DRIVER
 import sh.miles.cosmictools.FAILURE
+import sh.miles.cosmictools.IGNORE_CACHING
 import sh.miles.cosmictools.IGNORE_UNOFFICIAL_SOURCE
 import sh.miles.cosmictools.SOURCE
 import sh.miles.cosmictools.SUCCESS
@@ -13,6 +14,7 @@ import sh.miles.cosmictools.download.CosmicReachSource
 import sh.miles.cosmictools.download.VersionData
 import sh.miles.cosmictools.utils.DownloadSource
 import sh.miles.cosmictools.utils.DriverType
+import java.nio.file.Files
 import kotlin.system.exitProcess
 
 class CosmicReachDownloadRunStage : RunStage {
@@ -45,7 +47,6 @@ class CosmicReachDownloadRunStage : RunStage {
             val versionsInfo = helper.info()
             val version = VERSION.value(options)
             if (version.equals("latest")) {
-                println("here")
                 data = versionsInfo.map {
                     Pair(it, Semver(semanticVersion(it.version)))
                 }.maxWith(compareBy { it.second }).first
@@ -58,7 +59,9 @@ class CosmicReachDownloadRunStage : RunStage {
                 data = tempData
             }
 
-            helper.download(data, COSMIC_REACH_DOWNLOAD.resolve(data.fileVersion))
+            if (Files.notExists(COSMIC_REACH_DOWNLOAD.resolve(data.fileVersion)) || options.has(IGNORE_CACHING)) {
+                helper.download(data, COSMIC_REACH_DOWNLOAD.resolve(data.fileVersion))
+            }
         }
 
         return data

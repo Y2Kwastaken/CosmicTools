@@ -1,6 +1,7 @@
 package sh.miles.cosmictools.runstage
 
 import joptsimple.OptionSet
+import sh.miles.cosmictools.IGNORE_CACHING
 import sh.miles.cosmictools.IS_WINDOWS
 import sh.miles.cosmictools.SUCCESS
 import sh.miles.cosmictools.downloadFile
@@ -24,6 +25,8 @@ class MavenDownloadRunStage : RunStage {
 
     override fun runStage(options: OptionSet, propagate: MutableMap<String, Any>): Int {
         val maven = CurrentDirectory.cwd().resolve(MAVEN_FOLDER)
+        propagateBin(maven, propagate)
+        if (Files.exists(maven) && !options.has(IGNORE_CACHING)) return SUCCESS
         val m2 = System.getenv("M2_HOME")
         if (m2 == null || !Files.exists(Path.of(m2))) {
             if (Files.notExists(maven)) {
@@ -31,11 +34,6 @@ class MavenDownloadRunStage : RunStage {
             }
         }
 
-        if (IS_WINDOWS) {
-            propagate["maven-bin"] = maven.resolve("/bin/mvn.cmd")
-        } else {
-            propagate["maven-bin"] = maven.resolve("/bin/mvn")
-        }
         return SUCCESS
     }
 
@@ -49,5 +47,13 @@ class MavenDownloadRunStage : RunStage {
         ) { true }
         Files.deleteIfExists(tmp)
         println("Finished downloading maven, maven is now downloaded.")
+    }
+
+    private fun propagateBin(maven: Path, propagate: MutableMap<String, Any>) {
+        if (IS_WINDOWS) {
+            propagate["maven-bin"] = maven.resolve("/bin/mvn.cmd")
+        } else {
+            propagate["maven-bin"] = maven.resolve("/bin/mvn")
+        }
     }
 }

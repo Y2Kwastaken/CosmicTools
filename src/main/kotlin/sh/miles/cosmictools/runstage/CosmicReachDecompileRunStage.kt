@@ -2,8 +2,10 @@ package sh.miles.cosmictools.runstage
 
 import joptsimple.OptionSet
 import sh.miles.cosmictools.COSMIC_REACH
+import sh.miles.cosmictools.COSMIC_REACH_DECOMPILE
 import sh.miles.cosmictools.COSMIC_REACH_DOWNLOAD
 import sh.miles.cosmictools.DECOMPILE
+import sh.miles.cosmictools.IGNORE_CACHING
 import sh.miles.cosmictools.SUCCESS
 import sh.miles.cosmictools.VINE_FLOWER
 import sh.miles.cosmictools.download.VersionData
@@ -16,7 +18,6 @@ import java.nio.file.Path
 class CosmicReachDecompileRunStage : RunStage {
 
     companion object {
-        val DECOMPILE_PATH: Path = COSMIC_REACH.resolve("decompile")
         const val VINE_FLOWER_LINK: String =
             "https://github.com/Vineflower/vineflower/releases/download/1.9.3/vineflower-1.9.3.jar"
     }
@@ -25,20 +26,23 @@ class CosmicReachDecompileRunStage : RunStage {
     override fun runStage(options: OptionSet, propagate: MutableMap<String, Any>): Int {
         if (!options.has(DECOMPILE)) return SUCCESS
 
-        println("Downloading Vineflower to $VINE_FLOWER")
-        downloadFile(VINE_FLOWER_LINK, VINE_FLOWER)
-        println("Finished downloading Vineflower at $VINE_FLOWER")
+        if (Files.notExists(VINE_FLOWER) || options.has(IGNORE_CACHING)) {
+            println("Downloading Vineflower to $VINE_FLOWER")
+            downloadFile(VINE_FLOWER_LINK, VINE_FLOWER)
+            println("Finished downloading Vineflower at $VINE_FLOWER")
+        }
+
 
         val data = propagate["version_data"] as VersionData
         val jarLocation = COSMIC_REACH_DOWNLOAD.resolve(data.fileVersion).resolve("Cosmic Reach-${data.version}.jar")
-        val javaDest = DECOMPILE_PATH.resolve(data.fileVersion).resolve("java")
-        val classDest = DECOMPILE_PATH.resolve(data.fileVersion).resolve("classes")
+        val javaDest = COSMIC_REACH_DECOMPILE.resolve(data.fileVersion).resolve("java")
+        val classDest = COSMIC_REACH_DECOMPILE.resolve(data.fileVersion).resolve("classes")
 
-        if (Files.notExists(classDest)) {
+        if (Files.notExists(classDest) || options.has(IGNORE_CACHING)) {
             unzipJar(jarLocation, classDest)
         }
 
-        if (Files.notExists(javaDest)) {
+        if (Files.notExists(javaDest) || options.has(IGNORE_CACHING)) {
             decompileJar(classDest, javaDest)
         }
 

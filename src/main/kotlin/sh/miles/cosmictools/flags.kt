@@ -1,12 +1,10 @@
 package sh.miles.cosmictools
 
-import joptsimple.AbstractOptionSpec
-import joptsimple.ArgumentAcceptingOptionSpec
 import joptsimple.OptionParser
 import joptsimple.OptionSpec
 import joptsimple.util.EnumConverter
-import sh.miles.cosmictools.utils.DriverType
 import sh.miles.cosmictools.utils.DownloadSource
+import sh.miles.cosmictools.utils.DriverType
 
 val PARSER = OptionParser()
 
@@ -33,3 +31,7 @@ val CURRENT_WORKING_DIRECTORY: OptionSpec<String> =
     PARSER.acceptsAll(listOf("cwd", "current-directory"), "Sets the current working directory of CosmicTools")
         .withRequiredArg()
         .ofType(String::class.java)
+val IGNORE_CACHING: OptionSpec<Void> = PARSER.accepts("ignore-caching")
+val WIPE_CACHES: OptionSpec<String> = PARSER.accepts("wipe-caches")
+    .withOptionalArg()
+    .ofType(String::class.java)
